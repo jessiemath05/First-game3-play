@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title> Jessie Math 捷析 - 星際演算母體圖騰 </title>
+    
+    <meta name="description" content="© 2025–2026 Jessie Math 捷析老師. All rights reserved.">
+    <meta property="og:title" content="Jessie Math 捷析 - 星際演算母體圖騰">
+    <meta property="og:description" content="© 2025–2026 Jessie Math 捷析老師. All rights reserved.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="g5-u3-2.png">
+    <meta property="og:image:width" content="1024">
+    <meta property="og:image:height" content="1536">
+    <meta property="og:image:alt" content="Jessie Math 遊戲封面">
+    <link rel="image_src" href="g5-u3-2.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Jessie Math 捷析 - 星際演算母體圖騰">
+    <meta name="twitter:description" content="© 2025–2026 Jessie Math 捷析老師. All rights reserved.">
+    <meta name="twitter:image" content="g5-u3-2.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* 品牌顏色與科幻配色 */
+            --primary-bg: #0b051a;
+            --accent-purple: #8a2be2;
+            --neon-purple: #b829ff;
+            --neon-blue: #00f3ff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            
+            /* Header 按鈕配色 */
+            --btn-blue-border: #4a90e2;
+            --btn-blue-text: #2c3e50;
+            --btn-purple-bg: #f3efff;
+            --btn-purple-border: #9b59b6;
+            --btn-purple-text: #6c3483;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            /* 修改背景圖片設定，左上角對齊並涵蓋全畫面 */
+            background-image: url('jessie-logo-play.jpg');
+            background-size: cover;
+            background-position: top left;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+            overflow: hidden; 
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 加深透明覆蓋層，確保在有圖片背景時文字與畫面依然清晰可讀 */
+        #app-container {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 80px;
+            perspective: 1000px;
+            background: rgba(11, 5, 26, 0.7); 
+            transition: background 0.3s; /* 特效過渡 */
+        }
+
+        /* --- 手機專屬直式翻轉警告 --- */
+        #orientation-warning {
+            display: none;
+        }
+        @media screen and (max-width: 767px) and (orientation: portrait) {
+            #app-container, header, .footer-wrapper, #sound-toggle { 
+                display: none !important; 
+            }
+            #orientation-warning {
+                display: flex;
+                position: fixed;
+                top: 0; left: 0; width: 100vw; height: 100vh;
+                background: linear-gradient(135deg, #0b051a, #4a148c);
+                color: #fff;
+                z-index: 9999;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 30px;
+            }
+            .rotate-icon {
+                font-size: 5rem;
+                color: var(--neon-blue);
+                margin-bottom: 20px;
+                animation: rotateDevice 2s infinite ease-in-out alternate;
+            }
+        }
+        @keyframes rotateDevice {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-90deg); }
+        }
+
+        /* --- Header (Hero區) 樣式 --- */
+        header {
+            background-color: white;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+
+        .logo-circle {
+            width: 50px; height: 50px;
+            border: 2px solid #e67e22; 
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            background-color: transparent; overflow: hidden;
+        }
+        .logo-circle img { width: 80%; height: auto; }
+        .logo-text { color: #2c3e50; font-size: 24px; font-weight: bold; }
+
+        .nav-buttons { display: flex; gap: 15px; }
+        .nav-btn {
+            text-decoration: none; padding: 8px 20px; border-radius: 25px;
+            font-weight: 600; display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s; font-size: 15px;
+        }
+        .btn-home, .btn-lobby { border: 1px solid var(--btn-blue-border); color: var(--btn-blue-border); background: white; }
+        .btn-home:hover, .btn-lobby:hover { background: #f0f7ff; }
+        .btn-back { border: 1px solid var(--btn-purple-border); color: var(--btn-purple-text); background: var(--btn-purple-bg); }
+        .btn-back:hover { filter: brightness(0.95); }
+
+        .screen { display: none; max-width: 1000px; margin: 0 auto; animation: fadeIn 0.5s ease-out; }
+        .screen.active { display: block; }
+
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 30px; box-shadow: 0 0 30px rgba(138, 43, 226, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { text-shadow: 0 0 10px var(--neon-purple); text-align: center; margin-bottom: 20px; }
+
+        /* --- 第一頁：開始與排行榜 --- */
+        .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        input[type="text"] {
+            padding: 15px; border-radius: 10px; border: 1px solid var(--neon-blue);
+            background: rgba(0,0,0,0.5); color: white; font-size: 18px; outline: none;
+        }
+        input[type="text"]:focus { box-shadow: 0 0 15px var(--neon-blue); }
+
+        .start-btn {
+            background: linear-gradient(45deg, #8a2be2, #4a148c); color: white; border: none;
+            padding: 15px 30px; font-size: 20px; border-radius: 30px; cursor: pointer;
+            width: 100%; text-transform: uppercase; letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.6); transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: scale(1.05); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: var(--neon-blue); }
+
+        /* --- 第二頁：遊戲畫面 --- */
+        .hud {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.6); padding: 15px 30px; border-radius: 15px;
+            border: 1px solid var(--accent-purple); margin-bottom: 20px; font-size: 1.2rem;
+        }
+        .timer { color: #ff4757; font-weight: bold; text-shadow: 0 0 10px #ff4757; }
+        .score { color: #2ed573; font-weight: bold; text-shadow: 0 0 10px #2ed573; }
+
+        #question-prompt {
+            font-size: 1.5rem; text-align: center; color: #fff; margin-bottom: 20px;
+            padding: 15px; background: linear-gradient(90deg, transparent, rgba(138,43,226,0.5), transparent);
+            border-radius: 10px; min-height: 70px; display: flex; justify-content: center; align-items: center;
+        }
+
+        #game-area {
+            position: relative; height: 400px; border-radius: 20px; overflow: hidden;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #000 100%);
+            border: 2px solid var(--glass-border);
+        }
+        
+        #pause-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); color: var(--neon-blue);
+            font-size: 2rem; font-weight: bold; display: none;
+            justify-content: center; align-items: center; z-index: 50;
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .game-controls { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .control-btn {
+            background: rgba(0, 0, 0, 0.6); color: white; border: 1px solid var(--accent-purple);
+            padding: 10px 25px; font-size: 16px; border-radius: 20px; cursor: pointer; transition: 0.3s;
+        }
+        .control-btn:hover { background: var(--accent-purple); box-shadow: 0 0 15px var(--accent-purple); }
+
+        /* 階段一：懸浮碎片 */
+        .floating-shape {
+            position: absolute; cursor: pointer; filter: drop-shadow(0 0 10px var(--neon-blue));
+            transition: transform 0.3s;
+        }
+        .floating-shape:hover { transform: scale(1.2); }
+        .shape-wrong { animation: shakeError 0.4s; filter: drop-shadow(0 0 20px red) !important; }
+
+        /* 階段二：網格繪製 */
+        .grid-container {
+            display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr);
+            width: 300px; height: 300px; margin: 20px auto; position: relative;
+        }
+        .grid-dot {
+            width: 15px; height: 15px; background: rgba(255,255,255,0.3); border-radius: 50%;
+            margin: auto; cursor: pointer; transition: 0.2s; position: relative; z-index: 2;
+        }
+        .grid-dot:hover { background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
+        .grid-dot.selected { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
+        #canvas-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+        /* 階段三：圖騰鑲嵌 */
+        .totem-area { display: flex; justify-content: space-around; align-items: center; height: 100%; padding: 20px; }
+        .totem-target {
+            width: 200px; height: 200px; border: 3px dashed rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center;
+        }
+        .totem-pieces { display: flex; flex-direction: column; gap: 20px; }
+        .totem-piece { cursor: pointer; filter: drop-shadow(0 0 5px var(--accent-purple)); }
+
+        /* 底部聲音按鈕 */
+        #sound-toggle {
+            position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.6);
+            border: 1px solid var(--accent-purple); width: 50px; height: 50px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 24px; cursor: pointer; z-index: 1000; color: white;
+        }
+
+        /* Footer 樣式 (子彈型) */
+        .footer-wrapper {
+            position: fixed; bottom: 20px; width: 100%; display: flex;
+            justify-content: center; pointer-events: none; z-index: 1000;
+        }
+        .footer-pill {
+            display: flex; align-items: center; background: rgba(11, 5, 26, 0.85);
+            backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
+            border-radius: 50px; padding: 10px 25px; color: #ccc; font-size: 13px;
+            gap: 20px; pointer-events: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .footer-left, .footer-right { display: flex; align-items: center; gap: 10px; }
+        .footer-dot { width: 8px; height: 8px; background-color: var(--neon-blue); border-radius: 50%; box-shadow: 0 0 8px var(--neon-blue); }
+        .footer-icon { color: var(--neon-purple); font-size: 16px; }
+
+        /* 特效動畫 */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shakeError { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        @keyframes floatAnim { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-20px) rotate(15deg); } }
+        
+        .plus-one-effect {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 4rem; color: #2ed573; font-weight: bold; text-shadow: 0 0 20px #2ed573, 0 0 40px #fff;
+            pointer-events: none; z-index: 999;
+            animation: floatUpVanish 0.8s ease-out forwards;
+        }
+        @keyframes floatUpVanish { 
+            0% { opacity: 1; transform: translate(-50%, -30%) scale(0.5); } 
+            50% { transform: translate(-50%, -60%) scale(1.2); } 
+            100% { opacity: 0; transform: translate(-50%, -100%) scale(1); } 
+        }
+
+        .confetti {
+            position: fixed; top: -10px; width: 12px; height: 12px; z-index: 9999;
+            animation: fall linear forwards;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+        /* RWD */
+        @media(max-width: 768px) {
+            .intro-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 15px; }
+            .nav-buttons { flex-wrap: wrap; justify-content: center; }
+            .footer-pill { flex-direction: column; gap: 5px; padding: 10px 15px; font-size: 11px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="orientation-warning">
+        <i class="fas fa-mobile-alt rotate-icon"></i>
+        <h2>系統校準中...</h2>
+        <p style="margin-top: 15px; color: #ccc; font-size: 1.1rem; max-width: 80%;">偵測到行動裝置直向模式。<br><br>為了發揮演算母體最大效能，<strong style="color: var(--neon-blue);">請將您的裝置旋轉至橫向</strong> 以啟動遊戲介面。</p>
+    </div>
+
+    <header>
+        <div class="logo-area">
+            <div class="logo-circle">
+                <img src="JESSIEMATH-Q.png" alt="Logo" onerror="this.style.display='none'">
+            </div>
+            <div class="logo-text">Jessie Math捷析</div>
+        </div>
+        <div class="nav-buttons">
+            <a href="https://jessiemath0703-chu.github.io/website2/" class="nav-btn btn-home">
+                <i class="fas fa-home"></i> 首頁
+            </a>
+            <a href="https://jessiemath0703-chu.github.io/Game-Lobby/" class="nav-btn btn-lobby">
+                <i class="fas fa-gamepad"></i> 遊戲大廳
+            </a>
+            <a href="https://jessiemath0703-chu.github.io/Game-Lobby/#g5-u3" class="nav-btn btn-back">
+                <i class="fas fa-undo"></i> 回到 G5平面圖形
+            </a>
+        </div>
+    </header>
+
+    <div id="sound-toggle"><i class="fas fa-volume-up"></i></div>
+
+    <div id="app-container">
+        
+        <div id="screen-start" class="screen active">
+            <h1 style="font-size: 2.5rem; margin-top: 20px;">🌌 星際演算母體圖騰 🌌</h1>
+            <div class="intro-grid">
+                <div class="glass-panel">
+                    <h2>系統登入</h2>
+                    <p style="margin-bottom: 15px; color: #ccc;">修復演算母體需要您的空間幾何能力。請輸入代號以啟動光譜牽引束。</p>
+                    <div class="input-group">
+                        <input type="text" id="player-name" placeholder="輸入玩家名稱 (必填)" maxlength="10">
+                    </div>
+                    <button class="start-btn" onclick="startGame()">啟動修復程序</button>
+                    
+                    <div style="margin-top: 25px; font-size: 0.9rem; line-height: 1.6;">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 10px;">📜 任務規則</h3>
+                        <ul>
+                            <li>🎯 <b>終極目標</b>：限時 60 秒內，完成盡可能多的幾何圖形修復。</li>
+                            <li>🪐 <b>尋找碎片</b>：從軌道環打撈符合「陷阱特徵」的圖形。</li>
+                            <li>💠 <b>底座重建</b>：在演算塔網格上連線繪製精準的多邊形。</li>
+                            <li>🧩 <b>圖騰覺醒</b>：將碎片填入母體圖騰的正確位置。</li>
+                            <li>🏅 <b style="color:var(--neon-blue);">答對滿 12 題</b> 即可獲得特製勳章與煙火慶典！</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="glass-panel">
+                    <h2>🏆 星際修復排行榜 (Top 10)</h2>
+                    <table id="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>名次</th>
+                                <th>玩家</th>
+                                <th>分數</th>
+                                <th>狀態</th>
+                                <th>日期</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-game" class="screen">
+            <div class="hud">
+                <div>玩家: <span id="hud-name" style="color: var(--neon-blue);"></span></div>
+                <div>時間剩餘: <span id="hud-time" class="timer">60</span>s</div>
+                <div>修復進度: <span id="hud-score" class="score">0</span> 題</div>
+            </div>
+
+            <div id="question-prompt">系統載入中...</div>
+
+            <div id="game-area" class="glass-panel" style="padding: 0;">
+                <div id="pause-overlay">⏸ 遊戲暫停中</div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 5px;">
+                <button id="btn-submit-draw" class="start-btn" style="display: none; width: auto; padding: 10px 40px; font-size: 16px;">能量掃描 (確認繪製)</button>
+            </div>
+
+            <div class="game-controls">
+                <button class="control-btn" id="btn-pause" onclick="togglePause()">暫停</button>
+                <button class="control-btn" onclick="restartGame()">重新連線</button>
+                <button class="control-btn" onclick="showScreen('screen-start')">回指揮中心</button>
+            </div>
+        </div>
+
+        <div id="screen-end" class="screen">
+            <div class="glass-panel" style="text-align: center; max-width: 600px; margin: 50px auto;">
+                <h1 id="end-title">任務結束</h1>
+                <h2 style="color: var(--neon-blue);">最終修復數: <span id="end-score">0</span></h2>
+                <div id="badge-container" style="margin: 20px 0; display: none;">
+                    <p style="color: #2ed573; font-weight: bold; margin-bottom: 10px; font-size: 1.5rem;">🎉 恭喜獲得「星際修復大師」勳章！🎉</p>
+                    <img src="3.jpg" alt="徽章" onerror="this.style.display='none'" style="width: 150px; border-radius: 50%; box-shadow: 0 0 30px gold;">
+                </div>
+                <p id="end-msg" style="margin-bottom: 25px; color: #ccc; font-size: 1.2rem;"></p>
+                <button class="start-btn" onclick="showScreen('screen-start')">返回指揮中心</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-wrapper">
+        <div class="footer-pill">
+            <div class="footer-left">
+                <div class="footer-dot" aria-hidden="true"></div>
+                <div class="footer-copy">© 2025–2026 Jessie Math 捷析老師. All rights reserved.</div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-icon" aria-hidden="true"><i class="fas fa-compass"></i></div>
+                <div class="footer-tagline">數學不迷路，捷析Jessie帶你走向理解。</div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgm" src="Clock Arpeggio.mp3" loop></audio>
+
+<script>
+    /* ================= 不重複洗牌題庫機制 ================= */
+    class QuestionPool {
+        constructor(questions) {
+            this.original = [...questions];
+            this.pool = [];
+        }
+        get() {
+            if (this.pool.length === 0) {
+                // 陣列空了才重新洗牌
+                this.pool = [...this.original].sort(() => Math.random() - 0.5);
+            }
+            return this.pool.pop();
+        }
+        reset() {
+            this.pool = [...this.original].sort(() => Math.random() - 0.5);
+        }
+    }
+
+    /* ================= 系統與音效特效設定 ================= */
+    let isMuted = false;
+    const soundToggle = document.getElementById('sound-toggle');
+    const bgm = document.getElementById('bgm');
+    
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if (isMuted) return;
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        if (type === 'correct') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
+            osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); // C6
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    }
+
+    soundToggle.addEventListener('click', () => {
+        isMuted = !isMuted;
+        soundToggle.innerHTML = isMuted ? '<i class="fas fa-volume-mute" style="color:#ff4757"></i>' : '<i class="fas fa-volume-up"></i>';
+        
+        if (isMuted) {
+            bgm.pause();
+        } else if (playerName !== "") {
+            // 確保遊戲已經啟動才恢復播放背景音樂
+            bgm.play().catch(e => console.log("Audio play blocked", e));
+        }
+    });
+
+    // 成功 +1 浮動特效與全螢幕閃爍
+    function triggerCorrectVFX() {
+        const area = document.getElementById('game-area');
+        const container = document.getElementById('app-container');
+        
+        // 背景閃爍
+        container.style.background = "rgba(46, 213, 115, 0.4)";
+        setTimeout(() => { container.style.background = "rgba(11, 5, 26, 0.7)"; }, 150);
+
+        // +1 動畫
+        const floater = document.createElement('div');
+        floater.innerText = '+1';
+        floater.className = 'plus-one-effect';
+        area.appendChild(floater);
+        setTimeout(() => { if(floater.parentNode) floater.remove(); }, 800);
+    }
+
+    // 闖關成功灑紙屑特效
+    function triggerConfetti() {
+        for(let i=0; i<60; i++){
+            let conf = document.createElement('div');
+            conf.className = 'confetti';
+            conf.style.left = Math.random() * 100 + 'vw';
+            conf.style.backgroundColor = ['#ff4757', '#2ed573', '#1e90ff', '#ffa500', '#ff69b4', '#b829ff'][Math.floor(Math.random()*6)];
+            conf.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+            conf.style.opacity = Math.random() + 0.5;
+            document.body.appendChild(conf);
+            setTimeout(() => { if(conf.parentNode) conf.remove(); }, 4000);
+        }
+    }
+
+    /* ================= 排行榜資料邏輯 ================= */
+    const STORAGE_KEY = 'jessie_math_leaderboard_v2';
+    function getLeaderboard() {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    }
+    
+    function saveRecord(name, score, status) {
+        const lb = getLeaderboard();
+        const now = new Date();
+        const dateStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+        lb.push({ name, score, status, date: dateStr });
+        lb.sort((a, b) => b.score - a.score); 
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(lb.slice(0, 10))); 
+    }
+
+    function renderLeaderboard() {
+        const tbody = document.getElementById('leaderboard-body');
+        const lb = getLeaderboard();
+        tbody.innerHTML = '';
+        if (lb.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">尚無修復紀錄</td></tr>';
+            return;
+        }
+        lb.forEach((entry, index) => {
+            let rankIcon = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `🔸 ${index+1}`;
+            let statusColor = entry.status === '成功' ? '#2ed573' : '#ff4757';
+            tbody.innerHTML += `
+                <tr>
+                    <td>${rankIcon}</td>
+                    <td>${entry.name}</td>
+                    <td>${entry.score}</td>
+                    <td style="color: ${statusColor}">${entry.status}</td>
+                    <td>${entry.date}</td>
+                </tr>
+            `;
+        });
+    }
+
+    /* ================= 遊戲核心變數與控制 ================= */
+    let playerName = "";
+    let score = 0;
+    let timeLeft = 60;
+    let gameTimer = null;
+    let isPaused = false;
+    const WIN_SCORE = 12; // ★ 過關條件改為 12
+
+    let poolS1, poolS2, poolS3;
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        if (screenId === 'screen-start') renderLeaderboard();
+        if (gameTimer) clearInterval(gameTimer);
+    }
+
+    function startGame() {
+        const nameInput = document.getElementById('player-name').value.trim();
+        if (!nameInput) {
+            alert("⚠️ 系統警告：請輸入代號以啟動程序！");
+            return;
+        }
+        playerName = nameInput;
+        
+        if (!isMuted) {
+            bgm.play().catch(e => console.log("Audio play blocked", e));
+        }
+        
+        restartGame(true);
+    }
+
+    function restartGame(isStart = false) {
+        score = 0;
+        timeLeft = 60;
+        isPaused = false;
+        
+        document.getElementById('btn-pause').innerText = "暫停";
+        document.getElementById('pause-overlay').style.display = "none";
+        document.getElementById('question-prompt').style.visibility = "visible";
+        document.getElementById('hud-name').innerText = playerName;
+        
+        updateHUD();
+        
+        // 重置題庫池，確保每輪新遊戲開始是新鮮的亂序
+        poolS1 = new QuestionPool(s1Questions);
+        poolS2 = new QuestionPool(s2Questions);
+        poolS3 = new QuestionPool(s3Questions);
+        
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        showScreen('screen-game');
+        
+        gameTimer = setInterval(() => {
+            if(!isPaused) {
+                timeLeft--;
+                updateHUD();
+                if (timeLeft <= 0) endGame();
+            }
+        }, 1000);
+
+        nextQuestion();
+    }
+
+    function togglePause() {
+        isPaused = !isPaused;
+        const btn = document.getElementById('btn-pause');
+        const prompt = document.getElementById('question-prompt');
+        const pauseOverlay = document.getElementById('pause-overlay');
+        
+        if(isPaused) {
+            btn.innerText = "繼續";
+            pauseOverlay.style.display = "flex";
+            prompt.style.visibility = "hidden";
+        } else {
+            btn.innerText = "暫停";
+            pauseOverlay.style.display = "none";
+            prompt.style.visibility = "visible";
+        }
+    }
+
+    function updateHUD() {
+        document.getElementById('hud-time').innerText = timeLeft;
+        document.getElementById('hud-score').innerText = score;
+    }
+
+    function endGame() {
+        clearInterval(gameTimer);
+        const passed = score >= WIN_SCORE;
+        const status = passed ? '成功' : '失敗';
+        saveRecord(playerName, score, status);
+        
+        document.getElementById('end-score').innerText = score;
+        document.getElementById('end-title').innerText = passed ? "✨ 母體圖騰覺醒成功！ ✨" : "⚠️ 修復能量不足";
+        document.getElementById('end-msg').innerText = passed ? `卓越的演算能力！在60秒內突破了 ${WIN_SCORE} 道防線。` : "再挑戰一次";
+        document.getElementById('badge-container').style.display = passed ? 'block' : 'none';
+        
+        if(passed) triggerConfetti();
+        
+        showScreen('screen-end');
+    }
+
+    function nextQuestion() {
+        if(isPaused) return;
+        
+        const area = document.getElementById('game-area');
+        Array.from(area.children).forEach(child => {
+            if(child.id !== 'pause-overlay') child.remove();
+        });
+        document.getElementById('btn-submit-draw').style.display = 'none';
+
+        const stages = [renderStage1, renderStage2, renderStage3];
+        const randomStage = stages[Math.floor(Math.random() * stages.length)];
+        randomStage(area);
+    }
+
+    function handleCorrect() {
+        playSound('correct');
+        triggerCorrectVFX();
+        score++;
+        updateHUD();
+        setTimeout(nextQuestion, 400); 
+    }
+
+    function handleWrong(element) {
+        playSound('wrong');
+        document.getElementById('app-container').style.animation = "shakeError 0.4s";
+        setTimeout(() => document.getElementById('app-container').style.animation = "", 400);
+
+        if(element) {
+            element.classList.add('shape-wrong');
+            setTimeout(() => element.classList.remove('shape-wrong'), 400);
+        }
+    }
+
+    /* ================= 階段一：軌道環打撈作業 ================= */
+    const shapesSVG = {
+        square: '<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="rgba(0, 243, 255, 0.4)" stroke="#00f3ff" stroke-width="3"/></svg>',
+        rectangle: '<svg viewBox="0 0 100 100"><rect x="5" y="25" width="90" height="50" fill="rgba(184, 41, 255, 0.4)" stroke="#b829ff" stroke-width="3"/></svg>',
+        parallelogram: '<svg viewBox="0 0 100 100"><polygon points="20,80 80,80 90,20 30,20" fill="rgba(255, 105, 180, 0.4)" stroke="#ff69b4" stroke-width="3"/></svg>',
+        trapezoid: '<svg viewBox="0 0 100 100"><polygon points="10,80 90,80 70,20 30,20" fill="rgba(0, 255, 127, 0.4)" stroke="#00ff7f" stroke-width="3"/></svg>',
+        rhombus: '<svg viewBox="0 0 100 100"><polygon points="50,10 90,50 50,90 10,50" fill="rgba(255, 215, 0, 0.4)" stroke="#ffd700" stroke-width="3"/></svg>',
+        triangle: '<svg viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="rgba(255, 165, 0, 0.4)" stroke="#ffa500" stroke-width="3"/></svg>'
+    };
+
+    // 擴充題庫與陷阱
+    const s1Questions = [
+        { q: "尋找【只有一組對邊平行】的碎片", ans: "trapezoid" },
+        { q: "尋找【四邊等長，且有四個直角】的碎片", ans: "square" },
+        { q: "尋找【四邊等長，但沒有直角】的碎片", ans: "rhombus" },
+        { q: "尋找【兩組對邊分別平行，且有直角】但不叫正方形的碎片", ans: "rectangle" },
+        { q: "尋找【兩組對邊分別平行，沒有直角且四邊不全等】的碎片", ans: "parallelogram" },
+        { q: "陷阱！【內角和為180度】的圖形是？", ans: "triangle" },
+        { q: "陷阱！【對角線互相垂直且平分，但沒有直角】的碎片", ans: "rhombus" },
+        { q: "陷阱！【對角線等長且互相平分，但四邊不全等】的碎片", ans: "rectangle" },
+        { q: "陷阱！【四個角都是直角，且對角線互相垂直】的碎片", ans: "square" }
+    ];
+
+    function renderStage1(area) {
+        const qData = poolS1.get();
+        document.getElementById('question-prompt').innerHTML = `<span style="color:#00f3ff; font-size:1.1em">${qData.q}</span>`;
+        
+        let types = Object.keys(shapesSVG);
+        let pool = [qData.ans];
+        while(pool.length < 5) {
+            let r = types[Math.floor(Math.random() * types.length)];
+            if(r !== qData.ans && !pool.includes(r)) pool.push(r);
+        }
+        pool.sort(() => Math.random() - 0.5);
+
+        pool.forEach((type, i) => {
+            let div = document.createElement('div');
+            div.className = 'floating-shape';
+            div.innerHTML = shapesSVG[type];
+            div.style.width = '70px'; div.style.height = '70px';
+            div.style.left = (10 + Math.random() * 70) + '%';
+            div.style.top = (10 + Math.random() * 60) + '%';
+            div.style.animation = `floatAnim ${3 + Math.random()*2}s infinite alternate ease-in-out`;
+            
+            div.onclick = function() {
+                if(type === qData.ans) {
+                    div.style.transform = 'scale(0) rotate(360deg)'; 
+                    handleCorrect();
+                } else {
+                    handleWrong(div);
+                }
+            };
+            area.appendChild(div);
+        });
+    }
+
+    /* ================= 階段二：演算塔底座重建 (網格繪製) ================= */
+    let selectedNodes = [];
+    const s2Questions = [
+        { q: "點擊節點，繪製一個【直角三角形】 (需選3點)", type: "rightTriangle", points: 3 },
+        { q: "點擊節點，繪製一個【非正方形的長方形】 (需選4點)", type: "rectangle", points: 4 },
+        { q: "點擊節點，繪製一個【四邊等長且直角】的正方形 (需選4點)", type: "square", points: 4 },
+        { q: "點擊節點，繪製一個【等腰三角形】 (需選3點)", type: "isoscelesTriangle", points: 3 },
+        { q: "陷阱題！繪製一個【對角線等長，但四邊不全等的四邊形】 (需選4點)", type: "rectangle", points: 4 }
+    ];
+    let currentS2Target = null;
+
+    function renderStage2(area) {
+        const qData = poolS2.get();
+        currentS2Target = qData;
+        selectedNodes = [];
+        
+        document.getElementById('question-prompt').innerHTML = `<span style="color:#b829ff; font-size:1.1em">${qData.q}</span>`;
+        
+        const gridDiv = document.createElement('div');
+        gridDiv.className = 'grid-container';
+        gridDiv.id = 'draw-grid';
+        gridDiv.innerHTML = `<canvas id="canvas-lines" width="300" height="300"></canvas>`;
+        area.appendChild(gridDiv);
+        
+        for(let i=0; i<25; i++) {
+            let dot = document.createElement('div');
+            dot.className = 'grid-dot';
+            dot.dataset.idx = i; dot.dataset.x = i % 5; dot.dataset.y = Math.floor(i / 5);
+            dot.onclick = () => toggleNode(dot);
+            gridDiv.appendChild(dot);
+        }
+
+        const btn = document.getElementById('btn-submit-draw');
+        btn.style.display = 'inline-block';
+        btn.onclick = checkDrawing;
+    }
+
+    function toggleNode(dot) {
+        if(isPaused) return;
+        const idx = selectedNodes.indexOf(dot);
+        if (idx > -1) {
+            selectedNodes.splice(idx, 1);
+            dot.classList.remove('selected');
+        } else {
+            if (selectedNodes.length >= currentS2Target.points) {
+                selectedNodes[0].classList.remove('selected');
+                selectedNodes.shift();
+            }
+            selectedNodes.push(dot);
+            dot.classList.add('selected');
+        }
+        drawLines();
+    }
+
+    function drawLines() {
+        const canvas = document.getElementById('canvas-lines');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if(selectedNodes.length < 2) return;
+        
+        ctx.beginPath();
+        ctx.strokeStyle = '#00f3ff'; ctx.lineWidth = 3;
+        ctx.shadowBlur = 10; ctx.shadowColor = '#00f3ff';
+
+        selectedNodes.forEach((node, i) => {
+            let x = parseInt(node.dataset.x) * (300/5) + (300/10);
+            let y = parseInt(node.dataset.y) * (300/5) + (300/10);
+            if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        if(selectedNodes.length === currentS2Target.points) {
+            let startNode = selectedNodes[0];
+            ctx.lineTo(parseInt(startNode.dataset.x)*(300/5)+(300/10), parseInt(startNode.dataset.y)*(300/5)+(300/10));
+        }
+        ctx.stroke();
+    }
+
+    function checkDrawing() {
+        if(selectedNodes.length !== currentS2Target.points) {
+            alert(`請選擇 ${currentS2Target.points} 個發光點以進行掃描！`);
+            return;
+        }
+        
+        let pts = selectedNodes.map(n => ({ x: parseInt(n.dataset.x), y: parseInt(n.dataset.y) }));
+        let isCorrect = false;
+        const distSq = (p1, p2) => Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+
+        if (currentS2Target.type === 'rightTriangle') {
+            let d1 = distSq(pts[0], pts[1]); let d2 = distSq(pts[1], pts[2]); let d3 = distSq(pts[2], pts[0]);
+            let sides = [d1, d2, d3].sort((a,b)=>a-b);
+            if (sides[0] + sides[1] === sides[2] && sides[0] !== 0) isCorrect = true;
+
+        } else if (currentS2Target.type === 'rectangle' || currentS2Target.type === 'square') {
+            let d = [];
+            for(let i=0; i<4; i++) {
+                for(let j=i+1; j<4; j++) d.push(distSq(pts[i], pts[j]));
+            }
+            d.sort((a,b)=>a-b);
+            if(currentS2Target.type === 'rectangle') {
+                // 長方形：兩雙對邊相等，對角線相等，且不是正方形 (也就是短邊!=長邊)
+                if(d[0]>0 && d[0]==d[1] && d[2]==d[3] && d[4]==d[5] && d[0] !== d[2]) isCorrect = true;
+            } else {
+                // 正方形：四邊相等，對角線相等
+                if(d[0]>0 && d[0]==d[1] && d[1]==d[2] && d[2]==d[3] && d[4]==d[5]) isCorrect = true;
+            }
+        } else if (currentS2Target.type === 'isoscelesTriangle') {
+            let d1 = distSq(pts[0], pts[1]); let d2 = distSq(pts[1], pts[2]); let d3 = distSq(pts[2], pts[0]);
+            let sides = [d1, d2, d3].sort((a,b)=>a-b);
+            if((sides[0] === sides[1] || sides[1] === sides[2]) && sides[0] > 0) {
+                const area = Math.abs((pts[0].x*(pts[1].y-pts[2].y) + pts[1].x*(pts[2].y-pts[0].y) + pts[2].x*(pts[0].y-pts[1].y))/2);
+                if(area > 0) isCorrect = true;
+            }
+        }
+
+        if(isCorrect) {
+            document.getElementById('btn-submit-draw').style.display = 'none';
+            handleCorrect();
+        } else {
+            handleWrong(document.getElementById('draw-grid'));
+        }
+    }
+
+    /* ================= 階段三：母體圖騰覺醒 (形狀配對) ================= */
+    const s3Questions = [
+        { q: "選擇可以拼成【正六邊形】的另一半碎片", target: '<svg viewBox="0 0 100 100"><polygon points="25,5 75,5 100,50 75,95 25,95 0,50" fill="rgba(255,255,255,0.1)" stroke="#fff" stroke-dasharray="5,5"/></svg>', ans: 'trapezoid', options: ['square', 'trapezoid', 'triangle'] },
+        { q: "選擇兩個【等腰直角三角形】可以拼成的圖形", target: '<svg viewBox="0 0 100 100"><polygon points="10,10 50,10 50,50" fill="rgba(0,243,255,0.5)"/><polygon points="50,50 10,50 10,10" fill="rgba(0,243,255,0.5)"/><rect x="10" y="10" width="40" height="40" fill="none" stroke="#fff" stroke-dasharray="2,2"/></svg>', ans: 'square', options: ['parallelogram', 'square', 'rhombus'] },
+        { q: "選擇兩個【直角三角形】可以拼成的四邊形", target: '<svg viewBox="0 0 100 100"><polygon points="10,10 90,10 90,50 10,50" fill="rgba(255,255,255,0.1)" stroke="#fff" stroke-dasharray="5,5"/></svg>', ans: 'rectangle', options: ['rectangle', 'rhombus', 'trapezoid'] },
+        { q: "陷阱！這塊碎片缺少哪一半才能成為【平行四邊形】？", target: '<svg viewBox="0 0 100 100"><polygon points="20,80 80,80 90,20 30,20" fill="rgba(255,255,255,0.1)" stroke="#fff" stroke-dasharray="5,5"/><polygon points="20,80 80,80 90,20" fill="rgba(255,105,180,0.5)"/></svg>', ans: 'triangle', options: ['square', 'triangle', 'rectangle'] },
+        { q: "陷阱！把長方形裁掉一個角(直角三角形)，會變成什麼？", target: '<svg viewBox="0 0 100 100"><polygon points="10,80 90,80 70,20 10,20" fill="rgba(255,255,255,0.1)" stroke="#fff" stroke-dasharray="5,5"/></svg>', ans: 'trapezoid', options: ['parallelogram', 'triangle', 'trapezoid'] }
+    ];
+
+    function renderStage3(area) {
+        const qData = poolS3.get();
+        
+        document.getElementById('question-prompt').innerHTML = `<span style="color:#2ed573; font-size:1.1em">${qData.q}</span>`;
+        
+        const totemDiv = document.createElement('div');
+        totemDiv.className = 'totem-area';
+        totemDiv.innerHTML = `
+            <div class="totem-target">${qData.target}</div>
+            <div class="totem-pieces" id="totem-options"></div>
+        `;
+        area.appendChild(totemDiv);
+
+        const optsContainer = document.getElementById('totem-options');
+        let options = [...qData.options].sort(() => Math.random() - 0.5);
+
+        options.forEach(opt => {
+            let div = document.createElement('div');
+            div.className = 'totem-piece';
+            let svgContent = shapesSVG[opt] || '<svg viewBox="0 0 100 100"><polygon points="10,90 90,90 10,10" fill="rgba(255,255,255,0.4)" stroke="#fff" stroke-width="3"/></svg>'; 
+            div.innerHTML = svgContent;
+            div.style.width = '60px'; div.style.height = '60px';
+            
+            div.onclick = function() {
+                if(opt === qData.ans) {
+                    div.style.filter = 'drop-shadow(0 0 20px #2ed573)';
+                    handleCorrect();
+                } else {
+                    handleWrong(div);
+                }
+            }
+            optsContainer.appendChild(div);
+        });
+    }
+
+    // 初始執行一次以建立排行榜
+    renderLeaderboard();
+</script>
+
+</body>
+</html>
